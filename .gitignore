@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+*.keystore
+*.jks
+# 서명 키와 비밀번호는 절대 커밋하지 않는다
+/keystore/
+keystore.properties

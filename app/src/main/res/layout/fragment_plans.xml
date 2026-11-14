@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:baselineAligned="false">
+
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:orientation="vertical" android:background="@color/card" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="리스·장기렌트 약정거리" android:textSize="27sp" android:textStyle="bold" android:textColor="@color/text" />
+
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="계약 시작일" />
+                <EditText android:id="@+id/editLeaseStart" style="@style/FormEdit" android:hint="2024-12-01" android:inputType="date" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="계약 만기일" />
+                <EditText android:id="@+id/editLeaseEnd" style="@style/FormEdit" android:hint="2026-11-30" android:inputType="date" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="시작 계기판 (km)" />
+                <EditText android:id="@+id/editLeaseStartOdo" style="@style/FormEdit" android:hint="인수할 때 계기판" android:inputType="numberDecimal" />
+                <Button android:id="@+id/btnLeaseOdoNow" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="지금 계기판" android:textColor="@color/text" android:textSize="18sp" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="약정거리 합계 (km)" />
+                <EditText android:id="@+id/editLeaseLimit" style="@style/FormEdit" android:hint="예: 20000" android:inputType="numberDecimal" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="초과 운행료 (원/km)" />
+                <EditText android:id="@+id/editLeaseFee" style="@style/FormEdit" android:hint="계약서 값" android:inputType="numberDecimal" />
+            </LinearLayout>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:textSize="17sp" android:textColor="@color/muted"
+                android:text="약정거리 합계 = 연간 약정거리 × 계약 연수. 초과 운행료는 차종·계약마다 다르니 계약서 값을 넣어 주세요. 시작일을 비우고 저장하면 이 약정을 지웁니다." />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:orientation="vertical" android:background="@color/card" android:padding="20dp">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="보험 마일리지(주행거리) 특약" android:textSize="27sp" android:textStyle="bold" android:textColor="@color/text" />
+
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="보험 시작일" />
+                <EditText android:id="@+id/editInsStart" style="@style/FormEdit" android:hint="2026-03-01" android:inputType="date" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="보험 만기일" />
+                <EditText android:id="@+id/editInsEnd" style="@style/FormEdit" android:hint="2027-02-28" android:inputType="date" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="시작 계기판 (km)" />
+                <EditText android:id="@+id/editInsStartOdo" style="@style/FormEdit" android:hint="가입할 때 계기판" android:inputType="numberDecimal" />
+                <Button android:id="@+id/btnInsOdoNow" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="지금 계기판" android:textColor="@color/text" android:textSize="18sp" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="연 보험료 (원)" />
+                <EditText android:id="@+id/editInsPremium" style="@style/FormEdit" android:hint="예: 680000" android:inputType="numberDecimal" />
+            </LinearLayout>
+            <LinearLayout style="@style/FormRow">
+                <TextView style="@style/FormLabel" android:text="구간 (km:할인율%)" />
+                <EditText android:id="@+id/editInsTiers" style="@style/FormEdit" android:hint="3000:32, 5000:25, 7000:20" android:inputType="text" />
+            </LinearLayout>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:textSize="17sp" android:textColor="@color/muted"
+                android:text="구간과 할인율은 보험사·가입 시기마다 다릅니다. 가입한 보험의 약관·증권에 있는 값을 넣어 주세요. 시작일을 비우고 저장하면 이 약정을 지웁니다." />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="음성 안내" android:textSize="22sp" android:textColor="@color/muted" />
+        <com.google.android.material.button.MaterialButtonToggleGroup android:id="@+id/toggleVoice"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" app:singleSelection="true" app:selectionRequired="true">
+            <Button android:id="@+id/btnVoiceOn" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="켬" android:textSize="20sp" />
+            <Button android:id="@+id/btnVoiceOff" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="끔" android:textSize="20sp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="32dp" android:text="운행 종료 판단(계기판 정지)" android:textSize="22sp" android:textColor="@color/muted" />
+        <Button android:id="@+id/btnStallMinus" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="−" android:textColor="@color/text" android:textSize="22sp" />
+        <TextView android:id="@+id/txtStall" android:layout_width="90dp" android:layout_height="wrap_content" android:gravity="center" android:text="20초" android:textSize="24sp" android:textColor="@color/text" />
+        <Button android:id="@+id/btnStallPlus" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+" android:textColor="@color/text" android:textSize="22sp" />
+
+        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+
+        <Button android:id="@+id/btnDemo" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="72dp" android:text="예시 값 채우기" android:textColor="@color/text" android:textSize="22sp" />
+        <Button android:id="@+id/btnSave" android:layout_width="220dp" android:layout_height="72dp" android:layout_marginStart="12dp" android:text="저장" android:textSize="26sp" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/txtEnv" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+        android:fontFamily="monospace" android:textSize="16sp" android:textColor="@color/muted" android:text="" />
+</LinearLayout>
+</ScrollView>
+
+    <TextView
+        android:id="@+id/txtLocked"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center" android:background="#F20B1220" android:visibility="gone" android:clickable="true"
+        android:text="주행 중에는 약정을 수정할 수 없습니다.\n정차 후 이용해 주세요." android:textSize="39sp" android:textColor="@color/text" />
+</FrameLayout>

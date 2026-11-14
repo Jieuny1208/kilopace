@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">킬로페이스</string>
+    <string name="tab_driving">여유</string>
+    <string name="tab_ledger">기록</string>
+    <string name="tab_settings">약정</string>
+</resources>

@@ -1,0 +1,35 @@
+<resources>
+    <!-- 항상 다크 테마: 앱 배경이 어두워서 DayNight 라이트 모드에서는 대화상자 글씨가 안 보이는 문제가 있었다 -->
+    <style name="Theme.KiloPace" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">#0F766E</item>
+        <item name="colorPrimaryVariant">#115E59</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#2DD4BF</item>
+        <item name="android:windowBackground">#0B1220</item>
+        <item name="android:textColorPrimary">#F1F5F9</item>
+        <item name="android:textColorSecondary">#94A3B8</item>
+    </style>
+
+    <style name="FormRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
+    <style name="FormLabel">
+        <item name="android:layout_width">230dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/muted</item>
+    </style>
+    <style name="FormEdit">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">#64748B</item>
+        <item name="android:singleLine">true</item>
+    </style>
+</resources>

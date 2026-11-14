@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="horizontal" android:padding="16dp" android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp" android:layout_weight="3" android:layout_height="match_parent" android:orientation="vertical">
+
+            <TextView android:id="@+id/txtPeriod" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="운행 기록" android:textSize="31sp" android:textStyle="bold" android:textColor="@color/text" />
+
+            <TextView
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                android:fontFamily="monospace" android:textSize="18sp" android:textColor="@color/muted"
+                android:text="출발 일시          출발 계기판  도착 계기판     거리  목적지     (길게 누르면 삭제)" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="4dp"
+                android:background="@color/card" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp" android:layout_weight="2" android:layout_height="match_parent"
+            android:orientation="vertical" android:layout_marginStart="16dp">
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:text="약정 요약" android:textSize="22sp" android:textStyle="bold" android:textColor="@color/muted" />
+            <TextView android:id="@+id/txtSummary"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"
+                android:textSize="19sp" android:textColor="@color/text" android:text="" />
+
+            <Button android:id="@+id/btnExport"
+                android:layout_width="match_parent" android:layout_height="76dp" android:layout_marginTop="12dp"
+                android:text="휴대폰으로 받기 (QR + CSV)" android:textSize="25sp" />
+
+            <TextView android:id="@+id/txtExportInfo"
+                android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"
+                android:textSize="16sp" android:textColor="@color/muted" android:text="" />
+
+            <ImageView android:id="@+id/imgQr"
+                android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="8dp"
+                android:scaleType="fitCenter" android:contentDescription="QR" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 주행 중 잠금 오버레이 (CarUxRestrictions) -->
+    <TextView
+        android:id="@+id/txtLocked"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center" android:background="#F20B1220" android:visibility="gone" android:clickable="true"
+        android:text="주행 중에는 기록을 열 수 없습니다.\n정차 후 이용해 주세요." android:textSize="39sp" android:textColor="@color/text" />
+</FrameLayout>
