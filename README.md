@@ -20,7 +20,9 @@
 
 계기판 19,560km. 리스 약정 20,000km(남음 440km, 만기 15일), 보험 7,000km 이하 구간(남음 640km). 내비에 「부산역 KTX」 안내를 시작하면 앱이 편도 378km를 받아 왕복 756km로 환산하고, 내비 화면 뒤에 가려진 상태에서 말한다.
 
-> "부산역 KTX까지 왕복 약 756킬로미터입니다. 다녀오시면 약정거리를 316킬로미터 넘습니다. 초과 운행료는 약 31,600원입니다. 보험 할인 구간이 한 단계 내려가서 환급이 약 34,000원 줄어듭니다."
+> "부산역 KTX까지 왕복 약 756킬로미터입니다. 다녀오시면 약정거리를 316킬로미터 넘습니다. 초과 운행료는 약 31,600원입니다. 보험 할인 구간이 한 단계 내려가서 환급이 약 34,000원 줄어듭니다. 편도 220킬로미터 이내 목적지는 약정거리 안에서 다녀오실 수 있습니다."
+>
+> 넘는 목적지에는 약정 안에서 다녀올 수 있는 편도 거리를, 넘지 않는 목적지에는 다녀온 뒤 만기까지 지켜야 할 하루 거리를 이어서 말한다.
 
 이어서 23km를 달리고 P단에서 운전석 문을 열면 한 줄로 끝낸다.
 
@@ -77,7 +79,7 @@
 ```bash
 gradlew assembleDebug        # app/build/outputs/apk/debug/app-debug.apk
 gradlew assembleRelease      # R8 적용. keystore/keystore.properties 가 없으면 unsigned
-gradlew testDebugUnitTest    # JVM 단위 테스트 53건
+gradlew testDebugUnitTest    # JVM 단위 테스트 56건
 ```
 
 제출용 서명 APK는 [`apk/TEAM_KiloPace_release.apk`](apk/)에 있다.
@@ -112,7 +114,7 @@ Virtual Console: `adb forward tcp:8088 tcp:8088` 후 브라우저에서 `http://
 gradlew testDebugUnitTest
 ```
 
-계산·문장·상태 기계는 Android 의존이 없는 순수 Kotlin이라 JVM에서 돈다. 총 53건.
+계산·문장·상태 기계는 Android 의존이 없는 순수 Kotlin이라 JVM에서 돈다. 총 56건.
 
 | 파일 | 건수 | 범위 |
 |---|---|---|

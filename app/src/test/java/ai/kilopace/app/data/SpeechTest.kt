@@ -84,6 +84,23 @@ class SpeechTest {
         assertTrue(s, s.contains("다녀오셔도 약정거리까지 410킬로미터 남습니다."))
     }
 
+    @Test fun `crossing warning ends with the one-way distance that still fits`() {
+        val s = Speech.destinationWarning("부산역", Estimate(845.0, Estimate.Source.ROUTE), listOf(PaceCalc.impact(lease, odo, 845.0, now), PaceCalc.impact(ins, odo, 845.0, now)))
+        assertTrue(s, s.endsWith("편도 220킬로미터 이내 목적지는 약정거리 안에서 다녀오실 수 있습니다."))
+    }
+
+    @Test fun `short trip adds the daily allowance after the trip`() {
+        val s = Speech.destinationWarning("현대자동차 본사", Estimate(30.0, Estimate.Source.ROUTE), listOf(PaceCalc.impact(lease, odo, 30.0, now)))
+        assertTrue(s, s.endsWith("다녀오신 뒤에는 만기까지 하루 27킬로미터 이하로 달리시면 지킬 수 있습니다."))
+    }
+
+    @Test fun `no advice without a lease, when already over, or after maturity`() {
+        assertNull(Speech.advice(listOf(PaceCalc.impact(ins, odo, 845.0, now))))
+        assertNull(Speech.advice(listOf(PaceCalc.impact(lease, 20_400.0, 30.0, now))))
+        assertNull(Speech.advice(listOf(PaceCalc.impact(lease, odo, 30.0, t0 + 731 * day))))
+        assertNull(Speech.advice(emptyList()))
+    }
+
     @Test fun `warning without contracts says so`() {
         val s = Speech.destinationWarning("부산역", Estimate(845.0, Estimate.Source.STRAIGHT), emptyList())
         assertTrue(s, s.contains("등록된 약정이 없습니다"))

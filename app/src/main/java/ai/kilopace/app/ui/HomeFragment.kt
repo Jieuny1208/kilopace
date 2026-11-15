@@ -69,7 +69,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), Refreshable {
             txtAdvice.text = when {
                 est == null -> "왕복 거리를 추정할 근거가 없습니다. 한 번 다녀오면 그 거리로 알려 드립니다."
                 a.impacts.isEmpty() -> "등록된 약정이 없습니다."
-                else -> a.impacts.joinToString("\n") { Speech.impactLine(it) }
+                else -> (a.impacts.map { Speech.impactLine(it) } + listOfNotNull(Speech.advice(a.impacts)?.let { "→ $it" })).joinToString("\n")
             }
             txtAdvice.setTextColor(ContextCompat.getColor(requireContext(), if (a.crosses) R.color.warn else R.color.text))
         }

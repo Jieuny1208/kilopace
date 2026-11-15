@@ -86,7 +86,8 @@ object Speech {
             val tightest = impacts.filter { it.after.remainingKm != null }.minByOrNull { it.after.remainingKm!! }
                 ?: return "$head 이미 한도를 넘은 상태입니다."
             if (tightest.after.remainingKm!! < 0) return "$head 이미 한도를 넘은 상태입니다."
-            return "$head 다녀오셔도 ${limitWord(tightest.before.plan.type)}까지 ${Fmt.km(tightest.after.remainingKm!!)}킬로미터 남습니다."
+            val base = "$head 다녀오셔도 ${limitWord(tightest.before.plan.type)}까지 ${Fmt.km(tightest.after.remainingKm!!)}킬로미터 남습니다."
+            return listOfNotNull(base, advice(impacts)).joinToString(" ")
         }
         val parts = crossing.map { i ->
             when (i.before.plan.type) {
@@ -94,7 +95,25 @@ object Speech {
                 PlanType.INSURANCE -> "보험 할인 구간이 한 단계 내려가서 환급이 약 ${Fmt.won(i.costWon)}원 줄어듭니다."
             }
         }
-        return "$head " + parts.joinToString(" ")
+        return (listOf(head) + parts + listOfNotNull(advice(impacts))).joinToString(" ")
+    }
+
+    /**
+     * 경고 뒤에 붙이는 대안 한 문장. 화면과 TTS가 같은 문장을 쓴다.
+     *  - 약정거리를 넘는 목적지: 약정 안에서 다녀올 수 있는 편도 거리(남은 거리의 절반, 내림)를 알려 준다.
+     *  - 넘지 않는 목적지: 다녀온 뒤 만기까지 지켜야 할 하루 평균 거리를 알려 준다.
+     * 리스·장기렌트 약정이 없거나, 이미 넘었거나, 만기가 지났으면 null.
+     */
+    fun advice(impacts: List<Impact>): String? {
+        val lease = impacts.firstOrNull { it.before.plan.type == PlanType.LEASE } ?: return null
+        val before = lease.before.remainingKm ?: return null
+        if (before <= 0 || lease.before.remainingDays <= 0) return null
+        if (lease.crosses) {
+            val reach = Math.floor(before / 2).toLong()
+            return if (reach < 1) null else "편도 ${Fmt.km(reach.toDouble())}킬로미터 이내 목적지는 약정거리 안에서 다녀오실 수 있습니다."
+        }
+        val daily = lease.after.dailyAllowanceKm ?: return null
+        return "다녀오신 뒤에는 만기까지 하루 ${Fmt.km(Math.floor(daily))}킬로미터 이하로 달리시면 지킬 수 있습니다."
     }
 
     /** 운행이 끝났을 때 말하는 안내 */
