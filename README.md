@@ -7,6 +7,15 @@
 
 ![출발 전 경고 화면](docs/screens/02_warning.png)
 
+| 항목 | 내용 |
+|---|---|
+| 플랫폼 | Pleos Connect (Android Automotive OS), minSdk 28 · targetSdk 35 |
+| 언어·구조 | Kotlin, XML 뷰, 5계층(HMI · 응용 · 도메인 · 어댑터 · 플랫폼) |
+| 사용 SDK | Vehicle SDK 2.3.2, NaviHelper SDK 3.0.5, TTS·STT SDK 3.3.1, FusedLocation 1.1.3, AAOS CarUxRestrictions |
+| 검증 | JVM 단위 테스트 56건 통과, Pleos Connect Emulator 종단 시나리오 실측 |
+| 배포물 | 서명된 release APK(R8) [`apk/`](apk/), 사용 설명서 [`docs/MANUAL.md`](docs/MANUAL.md) |
+| 데이터 | 차량 로컬 저장만 사용. 서버 전송·로그인·분석 SDK 없음 |
+
 ---
 
 ## 무엇을 하는 앱인가
@@ -15,6 +24,15 @@
 - **마일리지 특약 구간**: 자동차보험에서 연간 주행거리가 짧을수록 보험료를 더 돌려받는 단계표.
 
 둘 다 계기판 누적거리로 정산되는데, 결과는 반납·만기 정산 때 알게 된다. 그때는 달린 거리를 되돌릴 수 없다. 넘길지 말지를 바꿀 수 있는 순간은 목적지를 넣고 출발하기 전이다. 킬로페이스는 그 순간에 계기판 값(Vehicle SDK)과 내비가 계산한 경로 거리(NaviHelper SDK)를 합쳐 한 번 말한다.
+
+## 어떤 문제를 어떻게 푸는가
+
+| 문제 | 킬로페이스의 해결 |
+|---|---|
+| 약정까지 남은 거리를 계약서와 계기판을 보고 직접 계산해야 한다 | 약정을 한 번 등록하면 계기판 누적거리를 차에서 읽어 남은 km와 하루 허용 km를 큰 숫자로 보여 준다 |
+| 장거리 한 번이 약정을 넘기는지 출발 전에 알 수 없다 | 내비에 목적지를 넣으면 경로 거리를 왕복으로 환산해 몇 km 넘고 얼마가 드는지 음성으로 한 번 말한다 |
+| 초과 사실을 반납·정산 때 처음 안다 | 출발 전 경고에 더해 지금 페이스의 만기 예상을 보여 주고, 대안 한 문장(편도 몇 km 이내는 가능, 하루 몇 km 이하면 지킴)을 덧붙인다 |
+| 운전 중에는 계산도 조회도 할 수 없다 | 운전자가 입력할 것이 없다. 차가 먼저 말하고, 물을 때는 큰 버튼 2개나 음성 한마디면 된다 |
 
 ## 핵심 장면 (에뮬레이터 실측, 2026-11-15)
 
@@ -29,6 +47,18 @@
 > "이번 운행은 23킬로미터였습니다. 약정거리까지 417킬로미터, 만기까지 15일 남았습니다. 하루 28킬로미터 이하로 달리시면 지킬 수 있습니다."
 
 초과 운행료 100원/km, 연 보험료 68만 원, 구간표는 시연용 **예시값**이다. 실제 값은 계약서·보험 증권마다 다르다.
+
+## 화면
+
+| 여유 화면 (주행 중에도 표시) | 출발 전 경고 | 주행 중 입력 잠금 |
+|---|---|---|
+| ![여유 화면](docs/screens/01_home.png) | ![출발 전 경고](docs/screens/02_warning.png) | ![주행 중 잠금](docs/screens/03_driving_lock.png) |
+
+| 도착 안내 | 기록 · 약정 요약 QR | 약정 등록 (정차 중에만) |
+|---|---|---|
+| ![도착 안내](docs/screens/04_trip_end.png) | ![기록과 QR](docs/screens/05_ledger_qr.png) | ![약정 등록](docs/screens/06_plans.png) |
+
+화면의 금액과 구간은 시연용 예시값이다.
 
 ## 기능
 
@@ -123,6 +153,33 @@ gradlew testDebugUnitTest
 | `trip/TripStateMachineTest.kt` | 12 | 운행 상태 기계(도어·정차·계기판 정지 조합, 도착 이벤트, 버튼, 쿨다운) |
 | `data/QrEncoderTest.kt` | 2 | QR 인코딩 |
 
+## 아키텍처
+
+![킬로페이스 시스템 아키텍처](docs/architecture.png)
+
+| 계층 | 구성 요소 | 책임 |
+|---|---|---|
+| HMI | `HomeFragment`, `PlansFragment`, `LedgerFragment`, 음성 안내 | 주행 중에는 큰 숫자와 큰 버튼만 보여 주고, 입력 화면은 정차 중에만 연다 |
+| 응용 | `TripController`, `KeepAliveService` | 신호 수집 → 영향 계산 → 문장 → 발화의 순서를 조정한다. 같은 목적지는 한 번만 말한다 |
+| 도메인 | `TripStateMachine`, `TripEstimator`, `PaceCalc`, `Speech`, `TripStore` | 운행 판정, 왕복 거리 추정, 약정 계산, 문장 생성. Android 의존이 없는 순수 Kotlin이라 JVM 단위 테스트로 고정했다 |
+| 어댑터 | `VehicleGateway`, `NaviGateway`, `LocationGateway`, `Voice`, `UxRestrictionsMonitor` | Pleos SDK를 인터페이스 뒤에 둔다. 도메인 계층은 플랫폼을 직접 참조하지 않는다 |
+| 플랫폼 | Vehicle SDK, NaviHelper SDK, FusedLocation, TTS·STT SDK, CarUxRestrictions | 읽기 전용으로만 쓴다. 차량 제어(Set / CONTROL_CAR_*) API는 쓰지 않는다 |
+
+**출발 전 경고의 데이터 경로**
+
+1. 내비 안내 시작: `onRouteStarted`로 목적지 이름과 경로 거리(m)를 받는다.
+2. 계기판 누적거리: Odometer 콜백으로 약정 사용 거리를 갱신한다.
+3. 영향 계산: 경로 거리를 왕복으로 환산하고 약정별 초과 km와 예상 금액, 보험 구간 변화를 계산한다.
+4. 문장 생성: 경고 문장에 대안 한 문장을 붙인다.
+5. 음성 발화: 온디바이스 TTS로 목적지당 한 번 말한다.
+
+**설계에서 지킨 것**
+
+- 계산·문장·상태 기계를 플랫폼에서 떼어 냈다. 에뮬레이터 없이도 56건의 테스트로 동작을 확인할 수 있다.
+- 왕복 거리의 근거를 3단계(내비 경로 거리 → 같은 목적지의 지난 운행 평균 → 직선거리 추정)로 두고, 화면에 어느 근거인지 항상 표시한다.
+- 앱이 내비 화면 뒤로 가도 이벤트를 받도록 포그라운드 서비스를 둔다.
+- 약정과 운행 기록은 차량 로컬에만 저장한다. 밖으로 나가는 경로는 사용자가 정차 중 직접 띄우는 QR과 CSV뿐이다.
+
 ## 프로젝트 구조
 
 ```
@@ -141,6 +198,7 @@ app/src/test/java/ai/kilopace/app   단위 테스트 4개 파일
 apk/                                서명된 release APK
 docs/MANUAL.md                      사용 설명서
 docs/screens/                       에뮬레이터 화면 6장
+docs/architecture.png               시스템 아키텍처 그림
 ```
 
 Kotlin, minSdk 28, targetSdk 35, XML 뷰, release는 R8 적용.
@@ -178,4 +236,4 @@ Kotlin, minSdk 28, targetSdk 35, XML 뷰, release는 R8 적용.
 
 ## 경과
 
-10/26~11/14에는 운행기록부 주제로 Pleos SDK 신호 검증과 운행 감지 엔진·음성·QR을 만들었다. 11/15에 공개 저장소에서 같은 주제가 다수임을 확인하고 주제를 바꿨으며, 검증된 엔진을 재사용해 약정 계산과 출발 전 경고를 새로 구현·실측했다.
+10/26부터 Pleos SDK 신호 검증(Odometer 콜백, 도어, 내비 정보)과 운행 감지 상태 기계, 음성, QR·CSV, 주행 중 잠금을 만들었다. 그 위에 약정 계산과 왕복 추정, 출발 전 경고와 대안 문장, 내비 경로 거리 연동, 포그라운드 서비스를 구현했고, 11/15에 에뮬레이터 종단 실측과 단위 테스트 56건 통과를 확인했다.
