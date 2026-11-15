@@ -82,10 +82,10 @@ gradlew assembleRelease      # R8 적용. keystore/keystore.properties 가 없�
 gradlew testDebugUnitTest    # JVM 단위 테스트 56건
 ```
 
-제출용 서명 APK는 [`apk/TEAM_KiloPace_release.apk`](apk/)에 있다.
+제출용 서명 APK는 [`apk/드라AI브_KiloPace_release.apk`](apk/)에 있다.
 
 ```bash
-adb install -r -g apk/TEAM_KiloPace_release.apk
+adb install -r -g apk/드라AI브_KiloPace_release.apk
 adb shell am start -n ai.kilopace.app/.ui.MainActivity
 ```
 

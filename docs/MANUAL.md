@@ -8,7 +8,7 @@
 ## 1. 설치와 첫 실행
 
 ```bash
-adb install -r -g apk/TEAM_KiloPace_release.apk
+adb install -r -g apk/드라AI브_KiloPace_release.apk
 adb shell am start -n ai.kilopace.app/.ui.MainActivity
 ```
 
